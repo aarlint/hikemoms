@@ -1,0 +1,1511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Missoula Trail Moms</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest"></script>
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #faf8f5;
+    --bg-card: #ffffff;
+    --bg-warm: #f5f0ea;
+    --bg-accent: #e8f5e9;
+    --border: #e8e3dc;
+    --border-hover: #d4cdc4;
+    --text: #2c2416;
+    --text-secondary: #6b5e4f;
+    --text-dim: #a69880;
+    --green: #4a7c59;
+    --green-light: #6ba368;
+    --green-dark: #3a5f44;
+    --sage: #8fae7e;
+    --earth: #c4956a;
+    --earth-light: #e8c9a8;
+    --sky: #5b9bd5;
+    --sunset: #e07c4f;
+    --berry: #b5577a;
+    --stone: #8a7e6f;
+    --snow: #ffffff;
+    --shadow: rgba(44,36,22,0.08);
+    --shadow-lg: rgba(44,36,22,0.12);
+  }
+
+  html { font-size: 16px; scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Hero */
+  .hero {
+    position: relative;
+    min-height: 480px;
+    background: linear-gradient(135deg, #3a5f44 0%, #4a7c59 30%, #6ba368 60%, #8fae7e 100%);
+    overflow: hidden;
+    display: flex;
+    align-items: flex-end;
+    padding: 0 32px 48px;
+  }
+
+  .hero__mountains {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 200px;
+    overflow: hidden;
+  }
+
+  .hero__mountains svg {
+    position: absolute;
+    bottom: -2px;
+    width: 100%;
+    min-width: 1200px;
+  }
+
+  .hero__content {
+    position: relative;
+    z-index: 2;
+    max-width: 1100px;
+    margin: 0 auto;
+    width: 100%;
+    padding-top: 60px;
+  }
+
+  .hero__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-size: 0.7rem;
+    font-weight: 500;
+    color: rgba(255,255,255,0.9);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+
+  .hero__title {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2.4rem, 5.5vw, 3.8rem);
+    font-weight: 400;
+    color: #fff;
+    line-height: 1.1;
+    margin-bottom: 12px;
+    text-shadow: 0 2px 20px rgba(0,0,0,0.15);
+  }
+
+  .hero__sub {
+    font-size: 1.1rem;
+    color: rgba(255,255,255,0.8);
+    font-weight: 300;
+    max-width: 500px;
+    line-height: 1.5;
+    margin-bottom: 24px;
+  }
+
+  .hero__actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    border-radius: 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.25s;
+    border: none;
+  }
+
+  .btn--primary {
+    background: #fff;
+    color: var(--green-dark);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+  }
+  .btn--primary:hover { transform: translateY(-1px); box-shadow: 0 6px 24px rgba(0,0,0,0.15); }
+
+  .btn--ghost {
+    background: rgba(255,255,255,0.1);
+    color: #fff;
+    border: 1px solid rgba(255,255,255,0.25);
+  }
+  .btn--ghost:hover { background: rgba(255,255,255,0.2); }
+
+  .btn--green {
+    background: var(--green);
+    color: #fff;
+  }
+  .btn--green:hover { background: var(--green-dark); }
+
+  .btn--outline {
+    background: transparent;
+    color: var(--green);
+    border: 1px solid var(--border);
+  }
+  .btn--outline:hover { border-color: var(--green); background: var(--bg-accent); }
+
+  /* Nav */
+  .nav {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 10;
+    padding: 20px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 1164px;
+    margin: 0 auto;
+  }
+
+  .nav__logo {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.2rem;
+    color: #fff;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .nav__links {
+    display: flex;
+    gap: 4px;
+  }
+
+  .nav__link {
+    color: rgba(255,255,255,0.7);
+    text-decoration: none;
+    font-size: 0.8rem;
+    font-weight: 500;
+    padding: 6px 14px;
+    border-radius: 8px;
+    transition: all 0.2s;
+  }
+  .nav__link:hover { color: #fff; background: rgba(255,255,255,0.1); }
+
+  @media (max-width: 700px) {
+    .nav__links { display: none; }
+  }
+
+  /* Container */
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 32px;
+  }
+
+  @media (max-width: 700px) {
+    .container { padding: 0 16px; }
+  }
+
+  /* Section headers */
+  .sh {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin: 48px 0 20px;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .sh__title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.6rem;
+    font-weight: 400;
+    color: var(--text);
+  }
+
+  .sh__sub {
+    font-size: 0.85rem;
+    color: var(--text-dim);
+    margin-top: 4px;
+  }
+
+  .sh__link {
+    font-size: 0.8rem;
+    color: var(--green);
+    text-decoration: none;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .sh__link:hover { color: var(--green-dark); }
+
+  /* Weather bar */
+  .weather {
+    margin-top: -24px;
+    position: relative;
+    z-index: 5;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+
+  .weather__card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 18px;
+    box-shadow: 0 4px 20px var(--shadow);
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .weather__icon {
+    font-size: 2rem;
+    line-height: 1;
+  }
+
+  .weather__info { flex: 1; }
+
+  .weather__day {
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-dim);
+    margin-bottom: 2px;
+  }
+
+  .weather__temp {
+    font-size: 1.4rem;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+
+  .weather__desc {
+    font-size: 0.72rem;
+    color: var(--text-secondary);
+  }
+
+  .weather__trail-status {
+    font-size: 0.6rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-top: 4px;
+    display: inline-block;
+  }
+  .weather__trail-status--good { background: var(--bg-accent); color: var(--green); }
+  .weather__trail-status--muddy { background: #fff3e0; color: var(--earth); }
+  .weather__trail-status--snow { background: #e3f2fd; color: var(--sky); }
+
+  /* Upcoming hikes */
+  .hikes {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 14px;
+  }
+
+  .hike {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+    transition: all 0.25s;
+    cursor: pointer;
+    box-shadow: 0 2px 8px var(--shadow);
+  }
+  .hike:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 32px var(--shadow-lg);
+    border-color: var(--border-hover);
+  }
+
+  .hike__header {
+    padding: 18px 20px 0;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+  }
+
+  .hike__date-badge {
+    background: var(--green);
+    color: #fff;
+    border-radius: 10px;
+    padding: 8px 12px;
+    text-align: center;
+    min-width: 52px;
+    flex-shrink: 0;
+  }
+
+  .hike__date-month {
+    font-size: 0.55rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    opacity: 0.8;
+  }
+
+  .hike__date-day {
+    font-size: 1.3rem;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+
+  .hike__date-dow {
+    font-size: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    opacity: 0.7;
+  }
+
+  .hike__info {
+    flex: 1;
+    padding-left: 14px;
+  }
+
+  .hike__name {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.1rem;
+    margin-bottom: 4px;
+  }
+
+  .hike__trail {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .hike__body {
+    padding: 14px 20px 18px;
+  }
+
+  .hike__stats {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 12px;
+  }
+
+  .hike__stat {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+  }
+
+  .hike__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-bottom: 12px;
+  }
+
+  .tag {
+    font-size: 0.6rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 3px 10px;
+    border-radius: 20px;
+  }
+  .tag--easy { background: #e8f5e9; color: #4a7c59; }
+  .tag--moderate { background: #fff8e1; color: #b8860b; }
+  .tag--hard { background: #fce4ec; color: #c62828; }
+  .tag--kid { background: #e3f2fd; color: #1565c0; }
+  .tag--dog { background: #fce4ec; color: var(--berry); }
+  .tag--stroller { background: #f3e5f5; color: #7b1fa2; }
+  .tag--carpool { background: #e0f2f1; color: #00695c; }
+
+  .hike__rsvp {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .hike__attendees {
+    display: flex;
+    align-items: center;
+  }
+
+  .hike__avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 2px solid var(--bg-card);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.55rem;
+    font-weight: 700;
+    color: #fff;
+    margin-left: -6px;
+  }
+  .hike__avatar:first-child { margin-left: 0; }
+
+  .hike__more-count {
+    font-size: 0.7rem;
+    color: var(--text-dim);
+    margin-left: 8px;
+  }
+
+  .hike__rsvp-btn {
+    padding: 6px 16px;
+    border-radius: 8px;
+    border: 1px solid var(--green);
+    background: transparent;
+    color: var(--green);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .hike__rsvp-btn:hover { background: var(--green); color: #fff; }
+  .hike__rsvp-btn--going { background: var(--green); color: #fff; border-color: var(--green); }
+
+  /* Trail Directory */
+  .trails {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 12px;
+  }
+
+  .trail {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px;
+    transition: all 0.25s;
+    box-shadow: 0 2px 8px var(--shadow);
+  }
+  .trail:hover { transform: translateY(-2px); box-shadow: 0 8px 24px var(--shadow-lg); }
+
+  .trail__top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+
+  .trail__name {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1rem;
+    line-height: 1.2;
+  }
+
+  .trail__rating {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--earth);
+    flex-shrink: 0;
+  }
+
+  .trail__location {
+    font-size: 0.72rem;
+    color: var(--text-dim);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-bottom: 12px;
+  }
+
+  .trail__stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+
+  .trail__stat-box {
+    text-align: center;
+    padding: 8px;
+    background: var(--bg-warm);
+    border-radius: 8px;
+  }
+
+  .trail__stat-val {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .trail__stat-label {
+    font-size: 0.55rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-dim);
+  }
+
+  .trail__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+
+  /* Photo gallery */
+  .gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 10px;
+  }
+
+  .gallery__item {
+    aspect-ratio: 1;
+    border-radius: 14px;
+    overflow: hidden;
+    position: relative;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    background: var(--bg-warm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .gallery__item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s;
+  }
+  .gallery__item:hover img { transform: scale(1.06); }
+
+  .gallery__placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-dim);
+    font-size: 0.75rem;
+  }
+
+  .gallery__overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 12px;
+    background: linear-gradient(transparent, rgba(0,0,0,0.6));
+    color: #fff;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .gallery__item:hover .gallery__overlay { opacity: 1; }
+
+  .gallery__caption {
+    font-size: 0.72rem;
+    font-weight: 500;
+  }
+
+  .gallery__date {
+    font-size: 0.6rem;
+    opacity: 0.7;
+  }
+
+  /* Gear checklist */
+  .gear {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 14px;
+  }
+
+  .gear__card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 22px;
+    box-shadow: 0 2px 8px var(--shadow);
+  }
+
+  .gear__card-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1rem;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .gear__list {
+    list-style: none;
+  }
+
+  .gear__item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+  }
+  .gear__item:last-child { border-bottom: none; }
+
+  .gear__check {
+    width: 20px;
+    height: 20px;
+    border-radius: 6px;
+    border: 2px solid var(--border);
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .gear__check:hover { border-color: var(--green); }
+  .gear__check--checked {
+    background: var(--green);
+    border-color: var(--green);
+  }
+
+  .gear__essential {
+    font-size: 0.55rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: var(--sunset);
+    background: #fff3e0;
+    padding: 1px 6px;
+    border-radius: 3px;
+    margin-left: auto;
+  }
+
+  /* Members */
+  .members {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 12px;
+  }
+
+  .member {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 22px 18px;
+    text-align: center;
+    transition: all 0.25s;
+    box-shadow: 0 2px 8px var(--shadow);
+  }
+  .member:hover { transform: translateY(-2px); box-shadow: 0 8px 24px var(--shadow-lg); }
+
+  .member__avatar {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #fff;
+    margin: 0 auto 10px;
+  }
+
+  .member__name {
+    font-weight: 600;
+    font-size: 0.9rem;
+    margin-bottom: 2px;
+  }
+
+  .member__kids {
+    font-size: 0.7rem;
+    color: var(--text-dim);
+    margin-bottom: 8px;
+  }
+
+  .member__stats {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+  }
+
+  .member__stat {
+    text-align: center;
+  }
+
+  .member__stat-val {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--green);
+  }
+
+  .member__stat-label {
+    font-size: 0.55rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-dim);
+  }
+
+  /* Carpool */
+  .carpool {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px var(--shadow);
+  }
+
+  .carpool__header {
+    padding: 18px 22px;
+    background: var(--bg-warm);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .carpool__title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .carpool__item {
+    padding: 14px 22px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    border-bottom: 1px solid var(--border);
+    transition: background 0.2s;
+  }
+  .carpool__item:last-child { border-bottom: none; }
+  .carpool__item:hover { background: var(--bg-warm); }
+
+  .carpool__driver-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: #fff;
+    flex-shrink: 0;
+  }
+
+  .carpool__info { flex: 1; }
+
+  .carpool__driver {
+    font-size: 0.85rem;
+    font-weight: 600;
+  }
+
+  .carpool__details {
+    font-size: 0.72rem;
+    color: var(--text-dim);
+    display: flex;
+    gap: 12px;
+  }
+
+  .carpool__seats {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--green);
+    background: var(--bg-accent);
+    padding: 4px 10px;
+    border-radius: 6px;
+    flex-shrink: 0;
+  }
+  .carpool__seats--full { color: var(--text-dim); background: var(--bg-warm); }
+
+  /* Safety tips */
+  .safety {
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+    border: 1px solid #fbbf24;
+    border-radius: 14px;
+    padding: 24px;
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+  }
+
+  .safety__icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: rgba(245,158,11,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .safety__content { flex: 1; }
+
+  .safety__title {
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: #92400e;
+    margin-bottom: 6px;
+  }
+
+  .safety__text {
+    font-size: 0.8rem;
+    color: #78350f;
+    line-height: 1.5;
+  }
+
+  /* Resources */
+  .resources {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 12px;
+  }
+
+  .resource {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px 18px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.25s;
+    box-shadow: 0 2px 8px var(--shadow);
+  }
+  .resource:hover { transform: translateY(-1px); box-shadow: 0 6px 20px var(--shadow-lg); border-color: var(--border-hover); }
+
+  .resource__icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .resource__name {
+    font-weight: 600;
+    font-size: 0.85rem;
+  }
+
+  .resource__desc {
+    font-size: 0.7rem;
+    color: var(--text-dim);
+  }
+
+  /* Footer */
+  .site-footer {
+    margin-top: 60px;
+    padding: 32px;
+    background: var(--green-dark);
+    color: rgba(255,255,255,0.7);
+    text-align: center;
+  }
+
+  .site-footer__logo {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.2rem;
+    color: #fff;
+    margin-bottom: 8px;
+  }
+
+  .site-footer__text {
+    font-size: 0.75rem;
+    max-width: 500px;
+    margin: 0 auto 16px;
+    line-height: 1.5;
+  }
+
+  .site-footer__links {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    font-size: 0.72rem;
+  }
+
+  .site-footer__link {
+    color: rgba(255,255,255,0.5);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .site-footer__link:hover { color: #fff; }
+
+  /* Animations */
+  .fade-up {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .fade-up.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Filter pills */
+  .filters {
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+  }
+
+  .filter-pill {
+    padding: 6px 14px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    background: var(--bg-card);
+    font-size: 0.72rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .filter-pill:hover { border-color: var(--green); color: var(--green); }
+  .filter-pill--active { background: var(--green); color: #fff; border-color: var(--green); }
+
+  @media (max-width: 700px) {
+    .hero { min-height: 400px; padding: 0 16px 40px; }
+    .hikes { grid-template-columns: 1fr; }
+    .weather { grid-template-columns: repeat(2, 1fr); margin-top: -16px; }
+    .trails { grid-template-columns: 1fr; }
+    .gear { grid-template-columns: 1fr; }
+    .members { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<!-- Hero -->
+<section class="hero">
+  <nav class="nav">
+    <a href="#" class="nav__logo">
+      <i data-lucide="mountain" style="width:20px;height:20px"></i>
+      Trail Moms
+    </a>
+    <div class="nav__links">
+      <a href="#hikes" class="nav__link">Hikes</a>
+      <a href="#trails" class="nav__link">Trails</a>
+      <a href="#photos" class="nav__link">Photos</a>
+      <a href="#gear" class="nav__link">Gear</a>
+      <a href="#members" class="nav__link">Members</a>
+    </div>
+  </nav>
+
+  <div class="hero__mountains">
+    <svg viewBox="0 0 1440 200" preserveAspectRatio="none" fill="none">
+      <path d="M0 200L48 180C96 160 192 120 288 110C384 100 480 120 576 100C672 80 768 20 864 10C960 0 1056 40 1152 60C1248 80 1344 80 1392 80L1440 80V200H0Z" fill="rgba(255,255,255,0.05)"/>
+      <path d="M0 200L60 170C120 140 240 110 360 105C480 100 600 130 720 120C840 110 960 50 1080 40C1200 30 1320 70 1380 90L1440 110V200H0Z" fill="var(--bg)"/>
+    </svg>
+  </div>
+
+  <div class="hero__content">
+    <div class="hero__badge">
+      <i data-lucide="map-pin" style="width:12px;height:12px"></i>
+      Missoula, Montana
+    </div>
+    <h1 class="hero__title">Missoula<br>Trail Moms</h1>
+    <p class="hero__sub">A community of moms exploring the incredible trails around Missoula — with kids, dogs, strollers, and good vibes.</p>
+    <div class="hero__actions">
+      <a href="#hikes" class="btn btn--primary"><i data-lucide="calendar" style="width:16px;height:16px"></i> Upcoming Hikes</a>
+      <a href="#trails" class="btn btn--ghost"><i data-lucide="compass" style="width:16px;height:16px"></i> Trail Guide</a>
+    </div>
+  </div>
+</section>
+
+<div class="container">
+
+  <!-- Weather -->
+  <div class="weather fade-up" id="weather"></div>
+
+  <!-- Upcoming Hikes -->
+  <div class="sh fade-up" id="hikes">
+    <div>
+      <h2 class="sh__title">Upcoming Hikes</h2>
+      <p class="sh__sub">RSVP to join — the more the merrier!</p>
+    </div>
+  </div>
+  <div class="hikes fade-up" id="hike-grid"></div>
+
+  <!-- Carpool for next hike -->
+  <div class="sh fade-up">
+    <div>
+      <h2 class="sh__title">Carpool Board</h2>
+      <p class="sh__sub">Coordinate rides to the trailhead</p>
+    </div>
+  </div>
+  <div class="carpool fade-up" id="carpool"></div>
+
+  <!-- Trail Directory -->
+  <div class="sh fade-up" id="trails">
+    <div>
+      <h2 class="sh__title">Trail Directory</h2>
+      <p class="sh__sub">Our favorite family-friendly trails around Missoula</p>
+    </div>
+  </div>
+  <div class="filters fade-up" id="trail-filters"></div>
+  <div class="trails fade-up" id="trail-grid"></div>
+
+  <!-- Safety -->
+  <div style="margin-top:24px" class="fade-up">
+    <div class="safety">
+      <div class="safety__icon"><i data-lucide="shield-alert" style="width:20px;height:20px;color:#d97706"></i></div>
+      <div class="safety__content">
+        <div class="safety__title">Trail Safety Reminder</div>
+        <div class="safety__text">
+          Always carry bear spray on Missoula trails. Let someone know your route and expected return time. 
+          Cell service is spotty on many trails — download offline maps. In bear country: make noise, travel in groups, and keep kids close. 
+          Check <a href="https://www.mtavalanche.com" style="color:#92400e;font-weight:600" target="_blank">mtavalanche.com</a> for winter conditions.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Photo Gallery -->
+  <div class="sh fade-up" id="photos">
+    <div>
+      <h2 class="sh__title">Photo Gallery</h2>
+      <p class="sh__sub">Moments from the trail</p>
+    </div>
+  </div>
+  <div class="gallery fade-up" id="gallery"></div>
+
+  <!-- Gear Checklist -->
+  <div class="sh fade-up" id="gear">
+    <div>
+      <h2 class="sh__title">Gear Checklist</h2>
+      <p class="sh__sub">What to pack for hiking with kids in Montana</p>
+    </div>
+  </div>
+  <div class="gear fade-up" id="gear-grid"></div>
+
+  <!-- Members -->
+  <div class="sh fade-up" id="members">
+    <div>
+      <h2 class="sh__title">Our Crew</h2>
+      <p class="sh__sub">The moms making it happen</p>
+    </div>
+  </div>
+  <div class="members fade-up" id="member-grid"></div>
+
+  <!-- Resources -->
+  <div class="sh fade-up">
+    <div>
+      <h2 class="sh__title">Resources</h2>
+      <p class="sh__sub">Useful links for Missoula hiking</p>
+    </div>
+  </div>
+  <div class="resources fade-up" id="resources"></div>
+
+</div>
+
+<footer class="site-footer">
+  <div class="site-footer__logo">🏔️ Missoula Trail Moms</div>
+  <p class="site-footer__text">Getting families outside on the beautiful trails of western Montana. All skill levels welcome — we hike at kid pace!</p>
+  <div class="site-footer__links">
+    <a href="#" class="site-footer__link">Facebook Group</a>
+    <a href="#" class="site-footer__link">Instagram</a>
+    <a href="#" class="site-footer__link">Contact</a>
+  </div>
+</footer>
+
+<script>
+// ============ DATA ============
+const COLORS = ['#4a7c59','#c4956a','#5b9bd5','#b5577a','#8a7e6f','#e07c4f','#6ba368','#a48bdb'];
+
+const weatherData = [
+  { day: 'Today', temp: '42°F', desc: 'Partly cloudy', icon: '⛅', trail: 'good' },
+  { day: 'Tomorrow', temp: '38°F', desc: 'Light rain', icon: '🌧️', trail: 'muddy' },
+  { day: 'Saturday', temp: '45°F', desc: 'Sunny', icon: '☀️', trail: 'good' },
+  { day: 'Sunday', temp: '35°F', desc: 'Snow showers', icon: '🌨️', trail: 'snow' },
+];
+
+const upcomingHikes = [
+  {
+    name: "Rattlesnake Creek Loop",
+    trail: "Rattlesnake NRA",
+    date: new Date(2026, 1, 24),
+    time: "9:00 AM",
+    distance: 4.2,
+    elevation: 450,
+    duration: "2.5 hrs",
+    difficulty: "easy",
+    tags: ["kid", "dog"],
+    attendees: ["Sarah M.", "Jen K.", "Ashley R.", "Megan T.", "Lindsay B."],
+    description: "Beautiful creek-side trail. Perfect for littles!",
+    meetup: "Rattlesnake Trailhead parking"
+  },
+  {
+    name: "Blue Mountain Lookout",
+    trail: "Blue Mountain Recreation Area",
+    date: new Date(2026, 2, 1),
+    time: "9:30 AM",
+    distance: 6.1,
+    elevation: 1200,
+    duration: "3.5 hrs",
+    difficulty: "moderate",
+    tags: ["dog", "carpool"],
+    attendees: ["Jen K.", "Nicole S.", "Brittany L."],
+    description: "Stunning valley views from the lookout tower. Moderate climb.",
+    meetup: "Blue Mountain Trailhead"
+  },
+  {
+    name: "Kim Williams Nature Trail",
+    trail: "Kim Williams Trail",
+    date: new Date(2026, 2, 5),
+    time: "10:00 AM",
+    distance: 2.8,
+    elevation: 120,
+    duration: "1.5 hrs",
+    difficulty: "easy",
+    tags: ["kid", "stroller"],
+    attendees: ["Sarah M.", "Ashley R.", "Megan T.", "Katie D.", "Lindsay B.", "Brittany L.", "Nicole S."],
+    description: "Flat paved trail along the river. Stroller-friendly!",
+    meetup: "Caras Park"
+  },
+  {
+    name: "Pattee Canyon Overlook",
+    trail: "Pattee Canyon Recreation Area",
+    date: new Date(2026, 2, 8),
+    time: "8:30 AM",
+    distance: 5.5,
+    elevation: 900,
+    duration: "3 hrs",
+    difficulty: "moderate",
+    tags: ["dog", "carpool"],
+    attendees: ["Jen K.", "Nicole S."],
+    description: "Early morning hike to catch the sunrise over the valley.",
+    meetup: "Pattee Canyon Picnic Area"
+  },
+];
+
+const trailDirectory = [
+  { name: "Rattlesnake Creek Trail", location: "Rattlesnake NRA", distance: 4.2, elevation: 450, difficulty: "easy", rating: 4.8, tags: ["kid","dog"], description: "Gentle creek-side trail with lots of water crossings." },
+  { name: "Blue Mountain Lookout", location: "Blue Mountain Rec Area", distance: 6.1, elevation: 1200, difficulty: "moderate", rating: 4.7, tags: ["dog"], description: "Fire lookout tower with panoramic Bitterroot views." },
+  { name: "Kim Williams Nature Trail", location: "South Hills", distance: 5.6, elevation: 120, difficulty: "easy", rating: 4.5, tags: ["kid","stroller","dog"], description: "Paved riverside trail. Perfect for strollers and bikes." },
+  { name: "Pattee Canyon Overlook", location: "Pattee Canyon", distance: 5.5, elevation: 900, difficulty: "moderate", rating: 4.6, tags: ["dog"], description: "Forest trail with excellent viewpoints." },
+  { name: "Waterworks Hill", location: "North Hills", distance: 2.4, elevation: 500, difficulty: "easy", rating: 4.3, tags: ["kid","dog"], description: "Quick city overlook hike. Great for sunset." },
+  { name: "Mount Sentinel - M Trail", location: "University Area", distance: 1.6, elevation: 620, difficulty: "moderate", rating: 4.4, tags: [], description: "Iconic Missoula hike to the M. Steep but short." },
+  { name: "Stuart Peak", location: "Rattlesnake Wilderness", distance: 12.0, elevation: 3200, difficulty: "hard", rating: 4.9, tags: ["dog"], description: "Full-day wilderness adventure. Breathtaking alpine." },
+  { name: "Maclay Flat Nature Trail", location: "Maclay Flat", distance: 1.5, elevation: 50, difficulty: "easy", rating: 4.2, tags: ["kid","stroller","dog"], description: "Flat riverfront loop. Sand beach access in summer." },
+  { name: "Crazy Canyon", location: "Pattee Canyon", distance: 3.8, elevation: 700, difficulty: "moderate", rating: 4.5, tags: ["dog"], description: "Quiet canyon trail with old-growth forest." },
+];
+
+const membersData = [
+  { name: "Sarah M.", kids: "2 kids (4, 7)", hikes: 24, color: COLORS[0] },
+  { name: "Jen K.", kids: "1 kid (2)", hikes: 18, color: COLORS[1] },
+  { name: "Ashley R.", kids: "3 kids (1, 5, 8)", hikes: 15, color: COLORS[2] },
+  { name: "Megan T.", kids: "2 kids (3, 6)", hikes: 21, color: COLORS[3] },
+  { name: "Nicole S.", kids: "1 kid (5)", hikes: 30, color: COLORS[4] },
+  { name: "Lindsay B.", kids: "2 kids (2, 4)", hikes: 12, color: COLORS[5] },
+  { name: "Katie D.", kids: "1 kid (8 mo)", hikes: 8, color: COLORS[6] },
+  { name: "Brittany L.", kids: "2 kids (6, 9)", hikes: 27, color: COLORS[7] },
+];
+
+const carpoolData = [
+  { driver: "Sarah M.", vehicle: "Subaru Outback", seats: 3, taken: 1, from: "South Hills", color: COLORS[0] },
+  { driver: "Jen K.", vehicle: "Toyota 4Runner", seats: 4, taken: 3, from: "Rattlesnake", color: COLORS[1] },
+  { driver: "Nicole S.", vehicle: "Honda Pilot", seats: 5, taken: 2, from: "Target Range", color: COLORS[4] },
+];
+
+const galleryItems = [
+  { caption: "Rattlesnake Creek — Fall Colors", date: "Oct 2025" },
+  { caption: "Blue Mountain Summit Crew", date: "Sep 2025" },
+  { caption: "Kim Williams with the Stroller Squad", date: "Aug 2025" },
+  { caption: "Stuart Peak — We Made It!", date: "Jul 2025" },
+  { caption: "Wildflowers on Waterworks Hill", date: "Jun 2025" },
+  { caption: "Snow Day Hike — Pattee Canyon", date: "Jan 2026" },
+];
+
+const gearData = [
+  {
+    title: "Day Hike Essentials",
+    icon: "backpack",
+    items: [
+      { name: "Water bottles (extra for kids!)", essential: true },
+      { name: "Snacks — goldfish, fruit, granola bars", essential: true },
+      { name: "Sunscreen + hats", essential: true },
+      { name: "First aid kit", essential: true },
+      { name: "Bear spray", essential: true },
+      { name: "Extra layers — Montana weather changes fast", essential: false },
+      { name: "Rain jackets", essential: false },
+    ]
+  },
+  {
+    title: "Kid-Specific Gear",
+    icon: "baby",
+    items: [
+      { name: "Child carrier / hiking backpack", essential: false },
+      { name: "Diapers + wipes", essential: true },
+      { name: "Change of clothes", essential: true },
+      { name: "Favorite small toy or book", essential: false },
+      { name: "Kid-sized trekking poles", essential: false },
+      { name: "Bug spray (kid-safe)", essential: false },
+    ]
+  },
+  {
+    title: "Safety & Navigation",
+    icon: "shield",
+    items: [
+      { name: "Charged phone + offline maps", essential: true },
+      { name: "Whistle (each kid gets one!)", essential: true },
+      { name: "Bear spray — know how to use it", essential: true },
+      { name: "Emergency contact list", essential: false },
+      { name: "Headlamp or flashlight", essential: false },
+      { name: "Space blanket", essential: false },
+    ]
+  },
+];
+
+const resourcesData = [
+  { name: "AllTrails — Missoula", desc: "Trail maps & reviews", url: "https://www.alltrails.com/us/montana/missoula", icon: "map", color: "#4a7c59" },
+  { name: "Montana Avalanche Center", desc: "Winter trail conditions", url: "https://www.mtavalanche.com", icon: "mountain-snow", color: "#5b9bd5" },
+  { name: "Montana FWP", desc: "Wildlife & fishing info", url: "https://fwp.mt.gov", icon: "fish", color: "#c4956a" },
+  { name: "Missoula Parks & Rec", desc: "Local trail updates", url: "https://www.ci.missoula.mt.us/parks", icon: "trees", color: "#6ba368" },
+  { name: "REI Missoula", desc: "Gear & workshops", url: "https://www.rei.com/stores/missoula", icon: "shopping-bag", color: "#e07c4f" },
+  { name: "Trail Safety — NPS", desc: "Hiking with children tips", url: "https://www.nps.gov/subjects/hiking/safety.htm", icon: "heart-pulse", color: "#b5577a" },
+];
+
+// ============ RENDER ============
+function escapeHtml(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+
+function initials(name) { return name.split(' ').map(w => w[0]).join(''); }
+
+function formatDate(d) {
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  return { month: months[d.getMonth()], day: d.getDate(), dow: days[d.getDay()] };
+}
+
+function renderWeather() {
+  document.getElementById('weather').innerHTML = weatherData.map(w => {
+    const statusClass = w.trail === 'good' ? 'good' : w.trail === 'muddy' ? 'muddy' : 'snow';
+    const statusText = w.trail === 'good' ? 'Trails Good' : w.trail === 'muddy' ? 'Expect Mud' : 'Snow on Trails';
+    return `<div class="weather__card">
+      <div class="weather__icon">${w.icon}</div>
+      <div class="weather__info">
+        <div class="weather__day">${w.day}</div>
+        <div class="weather__temp">${w.temp}</div>
+        <div class="weather__desc">${w.desc}</div>
+        <span class="weather__trail-status weather__trail-status--${statusClass}">${statusText}</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderHikes() {
+  document.getElementById('hike-grid').innerHTML = upcomingHikes.map(h => {
+    const d = formatDate(h.date);
+    const shown = h.attendees.slice(0, 4);
+    const extra = h.attendees.length - shown.length;
+    return `<div class="hike">
+      <div class="hike__header">
+        <div class="hike__date-badge">
+          <div class="hike__date-month">${d.month}</div>
+          <div class="hike__date-day">${d.day}</div>
+          <div class="hike__date-dow">${d.dow}</div>
+        </div>
+        <div class="hike__info">
+          <div class="hike__name">${escapeHtml(h.name)}</div>
+          <div class="hike__trail"><i data-lucide="map-pin" style="width:12px;height:12px"></i> ${escapeHtml(h.trail)} · ${h.time}</div>
+        </div>
+      </div>
+      <div class="hike__body">
+        <div class="hike__stats">
+          <div class="hike__stat"><i data-lucide="ruler" style="width:13px;height:13px;color:var(--green)"></i> ${h.distance} mi</div>
+          <div class="hike__stat"><i data-lucide="trending-up" style="width:13px;height:13px;color:var(--earth)"></i> ${h.elevation} ft</div>
+          <div class="hike__stat"><i data-lucide="clock" style="width:13px;height:13px;color:var(--sky)"></i> ${h.duration}</div>
+        </div>
+        <div class="hike__tags">
+          <span class="tag tag--${h.difficulty}">${h.difficulty}</span>
+          ${h.tags.map(t => `<span class="tag tag--${t}">${t === 'kid' ? '👶 Kid-Friendly' : t === 'dog' ? '🐕 Dog OK' : t === 'stroller' ? '👶 Stroller' : t === 'carpool' ? '🚗 Carpool' : t}</span>`).join('')}
+        </div>
+        <div class="hike__rsvp">
+          <div class="hike__attendees">
+            ${shown.map((a, i) => `<div class="hike__avatar" style="background:${COLORS[i % COLORS.length]};z-index:${10-i}">${initials(a)}</div>`).join('')}
+            ${extra > 0 ? `<span class="hike__more-count">+${extra} more</span>` : ''}
+          </div>
+          <button class="hike__rsvp-btn" onclick="this.classList.toggle('hike__rsvp-btn--going');this.textContent=this.classList.contains('hike__rsvp-btn--going')?'Going ✓':'RSVP'">RSVP</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+  lucide.createIcons({ nameAttr: 'data-lucide' });
+}
+
+function renderCarpool() {
+  document.getElementById('carpool').innerHTML = `
+    <div class="carpool__header">
+      <div class="carpool__title"><i data-lucide="car" style="width:18px;height:18px;color:var(--green)"></i> Rides for ${upcomingHikes[0].name}</div>
+      <button class="btn btn--outline" style="padding:6px 14px;font-size:0.72rem" onclick="alert('Offer a ride feature coming soon!')"><i data-lucide="plus" style="width:12px;height:12px"></i> Offer Ride</button>
+    </div>
+    ${carpoolData.map(c => {
+      const avail = c.seats - c.taken;
+      const full = avail === 0;
+      return `<div class="carpool__item">
+        <div class="carpool__driver-avatar" style="background:${c.color}">${initials(c.driver)}</div>
+        <div class="carpool__info">
+          <div class="carpool__driver">${escapeHtml(c.driver)}</div>
+          <div class="carpool__details">
+            <span>${c.vehicle}</span>
+            <span>From ${c.from}</span>
+          </div>
+        </div>
+        <span class="carpool__seats ${full ? 'carpool__seats--full' : ''}">${full ? 'Full' : avail + ' seat' + (avail > 1 ? 's' : '') + ' open'}</span>
+      </div>`;
+    }).join('')}
+  `;
+  lucide.createIcons({ nameAttr: 'data-lucide' });
+}
+
+let trailFilter = 'all';
+function renderTrailFilters() {
+  const filters = ['all','easy','moderate','hard','kid','dog','stroller'];
+  const labels = { all:'All Trails', easy:'Easy', moderate:'Moderate', hard:'Hard', kid:'👶 Kid-Friendly', dog:'🐕 Dog OK', stroller:'Stroller OK' };
+  document.getElementById('trail-filters').innerHTML = filters.map(f =>
+    `<button class="filter-pill ${f === trailFilter ? 'filter-pill--active' : ''}" onclick="setTrailFilter('${f}')">${labels[f]}</button>`
+  ).join('');
+}
+
+function setTrailFilter(f) {
+  trailFilter = f;
+  renderTrailFilters();
+  renderTrails();
+}
+
+function renderTrails() {
+  let filtered = trailDirectory;
+  if (['easy','moderate','hard'].includes(trailFilter)) filtered = filtered.filter(t => t.difficulty === trailFilter);
+  else if (trailFilter !== 'all') filtered = filtered.filter(t => t.tags.includes(trailFilter));
+
+  document.getElementById('trail-grid').innerHTML = filtered.map(t => `
+    <div class="trail">
+      <div class="trail__top">
+        <div class="trail__name">${escapeHtml(t.name)}</div>
+        <div class="trail__rating"><i data-lucide="star" style="width:12px;height:12px"></i> ${t.rating}</div>
+      </div>
+      <div class="trail__location"><i data-lucide="map-pin" style="width:11px;height:11px"></i> ${escapeHtml(t.location)}</div>
+      <div class="trail__stats">
+        <div class="trail__stat-box"><div class="trail__stat-val">${t.distance} mi</div><div class="trail__stat-label">Distance</div></div>
+        <div class="trail__stat-box"><div class="trail__stat-val">${t.elevation} ft</div><div class="trail__stat-label">Elevation</div></div>
+        <div class="trail__stat-box"><div class="trail__stat-val">${t.difficulty}</div><div class="trail__stat-label">Difficulty</div></div>
+      </div>
+      <div class="trail__tags">
+        <span class="tag tag--${t.difficulty}">${t.difficulty}</span>
+        ${t.tags.map(tg => `<span class="tag tag--${tg}">${tg === 'kid' ? '👶 Kids' : tg === 'dog' ? '🐕 Dogs' : '👶 Stroller'}</span>`).join('')}
+      </div>
+    </div>
+  `).join('');
+  lucide.createIcons({ nameAttr: 'data-lucide' });
+}
+
+function renderGallery() {
+  document.getElementById('gallery').innerHTML = galleryItems.map(g => `
+    <div class="gallery__item">
+      <div class="gallery__placeholder">
+        <i data-lucide="camera" style="width:24px;height:24px"></i>
+        <span>${escapeHtml(g.caption)}</span>
+      </div>
+      <div class="gallery__overlay">
+        <div class="gallery__caption">${escapeHtml(g.caption)}</div>
+        <div class="gallery__date">${g.date}</div>
+      </div>
+    </div>
+  `).join('');
+  lucide.createIcons({ nameAttr: 'data-lucide' });
+}
+
+function renderGear() {
+  document.getElementById('gear-grid').innerHTML = gearData.map(g => `
+    <div class="gear__card">
+      <div class="gear__card-title"><i data-lucide="${g.icon}" style="width:18px;height:18px;color:var(--green)"></i> ${g.title}</div>
+      <ul class="gear__list">
+        ${g.items.map(item => `
+          <li class="gear__item">
+            <div class="gear__check" onclick="this.classList.toggle('gear__check--checked');const ic=this.querySelector('i');if(this.classList.contains('gear__check--checked')){this.innerHTML='<i data-lucide=\\'check\\' style=\\'width:12px;height:12px;color:#fff\\'></i>';lucide.createIcons({nameAttr:'data-lucide'})}else{this.innerHTML=''}"></div>
+            <span>${escapeHtml(item.name)}</span>
+            ${item.essential ? '<span class="gear__essential">Essential</span>' : ''}
+          </li>
+        `).join('')}
+      </ul>
+    </div>
+  `).join('');
+  lucide.createIcons({ nameAttr: 'data-lucide' });
+}
+
+function renderMembers() {
+  document.getElementById('member-grid').innerHTML = membersData.map(m => `
+    <div class="member">
+      <div class="member__avatar" style="background:${m.color}">${initials(m.name)}</div>
+      <div class="member__name">${escapeHtml(m.name)}</div>
+      <div class="member__kids">${escapeHtml(m.kids)}</div>
+      <div class="member__stats">
+        <div class="member__stat">
+          <div class="member__stat-val">${m.hikes}</div>
+          <div class="member__stat-label">Hikes</div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderResources() {
+  document.getElementById('resources').innerHTML = resourcesData.map(r => `
+    <a href="${r.url}" target="_blank" rel="noopener" class="resource">
+      <div class="resource__icon" style="background:color-mix(in srgb, ${r.color} 12%, transparent)">
+        <i data-lucide="${r.icon}" style="width:18px;height:18px;color:${r.color}"></i>
+      </div>
+      <div>
+        <div class="resource__name">${escapeHtml(r.name)}</div>
+        <div class="resource__desc">${escapeHtml(r.desc)}</div>
+      </div>
+    </a>
+  `).join('');
+  lucide.createIcons({ nameAttr: 'data-lucide' });
+}
+
+// Scroll reveal
+function initScrollReveal() {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+}
+
+// Init
+lucide.createIcons();
+renderWeather();
+renderHikes();
+renderCarpool();
+renderTrailFilters();
+renderTrails();
+renderGallery();
+renderGear();
+renderMembers();
+renderResources();
+initScrollReveal();
+</script>
+
+</body>
+</html>
