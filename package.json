@@ -1,0 +1,13 @@
+{
+  "name": "hikemoms",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.21.0",
+    "better-sqlite3": "^11.6.0",
+    "serve-static": "^1.16.0"
+  }
+}

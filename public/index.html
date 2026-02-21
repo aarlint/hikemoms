@@ -1131,8 +1131,12 @@
 </footer>
 
 <script>
-// ============ DATA ============
+// ============ CONFIG ============
 const COLORS = ['#4a7c59','#c4956a','#5b9bd5','#b5577a','#8a7e6f','#e07c4f','#6ba368','#a48bdb'];
+let currentUser = null;
+let hikesData = [];
+let trailsDataAPI = [];
+let membersDataAPI = [];
 
 const weatherData = [
   { day: 'Today', temp: '42°F', desc: 'Partly cloudy', icon: '⛅', trail: 'good' },
@@ -1493,18 +1497,255 @@ function initScrollReveal() {
   document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
 }
 
-// Init
-lucide.createIcons();
-renderWeather();
-renderHikes();
-renderCarpool();
-renderTrailFilters();
-renderTrails();
-renderGallery();
-renderGear();
-renderMembers();
-renderResources();
-initScrollReveal();
+// ============ API ============
+async function api(url, opts = {}) {
+  const res = await fetch(url, { headers: { 'Content-Type': 'application/json', ...opts.headers }, ...opts });
+  if (res.status === 401) { document.body.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;font-family:DM Sans,sans-serif;color:#6b5e4f"><div style="text-align:center"><h2>🏔️ Missoula Trail Moms</h2><p style="margin-top:12px">Please sign in through Cloudflare Access to continue.</p></div></div>'; return null; }
+  if (!res.ok) { const e = await res.json().catch(() => ({})); throw new Error(e.error || 'Request failed'); }
+  return res.json();
+}
+
+async function loadUser() {
+  currentUser = await api('/api/me');
+  if (!currentUser) return false;
+  // Show user indicator
+  const nav = document.querySelector('.nav__links');
+  if (nav && currentUser) {
+    const el = document.createElement('span');
+    el.className = 'nav__link';
+    el.style.cssText = 'display:flex;align-items:center;gap:6px;background:rgba(255,255,255,0.15);border-radius:20px;padding:4px 12px 4px 4px;cursor:pointer';
+    el.innerHTML = `<span style="width:24px;height:24px;border-radius:50%;background:${currentUser.avatar_color || COLORS[0]};display:flex;align-items:center;justify-content:center;font-size:0.55rem;font-weight:700;color:#fff">${initials(currentUser.display_name || 'U')}</span>${escapeHtml(currentUser.display_name || 'Profile')}`;
+    el.onclick = () => openProfileModal();
+    nav.appendChild(el);
+  }
+  return true;
+}
+
+async function loadHikes() {
+  hikesData = await api('/api/hikes') || [];
+  renderHikesAPI();
+  if (hikesData.length > 0) loadCarpool(hikesData[0].id);
+}
+
+function renderHikesAPI() {
+  const grid = document.getElementById('hike-grid');
+  if (!hikesData.length) { grid.innerHTML = '<p style="color:var(--text-dim);padding:20px">No upcoming hikes yet. Be the first to plan one!</p>'; return; }
+  grid.innerHTML = hikesData.map(h => {
+    const dt = new Date(h.date + 'T00:00:00');
+    const d = formatDate(dt);
+    const tags = h.tags || [];
+    const att = h.attendees || [];
+    const shown = att.slice(0, 4);
+    const extra = att.length - shown.length;
+    const isGoing = h.user_rsvp === 'going';
+    return `<div class="hike">
+      <div class="hike__header">
+        <div class="hike__date-badge">
+          <div class="hike__date-month">${d.month}</div>
+          <div class="hike__date-day">${d.day}</div>
+          <div class="hike__date-dow">${d.dow}</div>
+        </div>
+        <div class="hike__info">
+          <div class="hike__name">${escapeHtml(h.name)}</div>
+          <div class="hike__trail"><i data-lucide="map-pin" style="width:12px;height:12px"></i> ${escapeHtml(h.trail)} · ${h.time}</div>
+        </div>
+      </div>
+      <div class="hike__body">
+        <div class="hike__stats">
+          ${h.distance ? `<div class="hike__stat"><i data-lucide="ruler" style="width:13px;height:13px;color:var(--green)"></i> ${h.distance} mi</div>` : ''}
+          ${h.elevation ? `<div class="hike__stat"><i data-lucide="trending-up" style="width:13px;height:13px;color:var(--earth)"></i> ${h.elevation} ft</div>` : ''}
+          ${h.duration ? `<div class="hike__stat"><i data-lucide="clock" style="width:13px;height:13px;color:var(--sky)"></i> ${h.duration}</div>` : ''}
+        </div>
+        <div class="hike__tags">
+          <span class="tag tag--${h.difficulty || 'easy'}">${h.difficulty || 'easy'}</span>
+          ${tags.map(t => `<span class="tag tag--${t}">${t === 'kid' ? '👶 Kid-Friendly' : t === 'dog' ? '🐕 Dog OK' : t === 'stroller' ? '👶 Stroller' : t === 'carpool' ? '🚗 Carpool' : t}</span>`).join('')}
+        </div>
+        ${h.meetup_location ? `<div style="font-size:0.72rem;color:var(--text-dim);margin-bottom:10px;display:flex;align-items:center;gap:4px"><i data-lucide="navigation" style="width:11px;height:11px"></i> Meet at: ${escapeHtml(h.meetup_location)}</div>` : ''}
+        <div class="hike__rsvp">
+          <div class="hike__attendees">
+            ${shown.map((a, i) => `<div class="hike__avatar" style="background:${a.avatar_color || COLORS[i % COLORS.length]};z-index:${10-i}">${initials(a.display_name || '?')}</div>`).join('')}
+            ${extra > 0 ? `<span class="hike__more-count">+${extra} more</span>` : ''}
+          </div>
+          <button class="hike__rsvp-btn ${isGoing ? 'hike__rsvp-btn--going' : ''}" onclick="toggleRSVP(${h.id}, this)">${isGoing ? 'Going ✓' : 'RSVP'}</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+  lucide.createIcons({ nameAttr: 'data-lucide' });
+}
+
+async function toggleRSVP(hikeId, btn) {
+  btn.disabled = true;
+  const result = await api(`/api/hikes/${hikeId}/rsvp`, { method: 'POST' });
+  if (result) {
+    await loadHikes();
+  }
+  btn.disabled = false;
+}
+
+async function loadCarpool(hikeId) {
+  const offers = await api(`/api/hikes/${hikeId}/carpool`) || [];
+  renderCarpoolAPI(offers, hikeId);
+}
+
+function renderCarpoolAPI(offers, hikeId) {
+  const hike = hikesData.find(h => h.id === hikeId);
+  const el = document.getElementById('carpool');
+  el.innerHTML = `
+    <div class="carpool__header">
+      <div class="carpool__title"><i data-lucide="car" style="width:18px;height:18px;color:var(--green)"></i> Rides for ${hike ? escapeHtml(hike.name) : 'Next Hike'}</div>
+      <button class="btn btn--outline" style="padding:6px 14px;font-size:0.72rem" onclick="offerRide(${hikeId})"><i data-lucide="plus" style="width:12px;height:12px"></i> Offer Ride</button>
+    </div>
+    ${offers.length === 0 ? '<div style="padding:24px;text-align:center;color:var(--text-dim);font-size:0.85rem">No rides offered yet. Be the first!</div>' :
+    offers.map(o => {
+      const avail = o.total_seats - o.seats_taken;
+      const full = avail <= 0;
+      return `<div class="carpool__item">
+        <div class="carpool__driver-avatar" style="background:${o.driver_color || COLORS[0]}">${initials(o.driver_name)}</div>
+        <div class="carpool__info">
+          <div class="carpool__driver">${escapeHtml(o.driver_name)}</div>
+          <div class="carpool__details">
+            <span>${escapeHtml(o.vehicle || 'Vehicle')}</span>
+            ${o.pickup_location ? `<span>From ${escapeHtml(o.pickup_location)}</span>` : ''}
+          </div>
+        </div>
+        ${o.driver_id === currentUser?.id ? '<span class="carpool__seats" style="color:var(--earth);background:#fff8e1">Your ride</span>' :
+        full ? '<span class="carpool__seats carpool__seats--full">Full</span>' :
+        `<button class="carpool__seats" style="cursor:pointer;border:none;font-family:inherit" onclick="joinRide(${o.id}, ${hikeId})">${o.user_riding ? '✓ Riding' : avail + ' seat' + (avail > 1 ? 's' : '')}</button>`}
+      </div>`;
+    }).join('')}
+  `;
+  lucide.createIcons({ nameAttr: 'data-lucide' });
+}
+
+async function offerRide(hikeId) {
+  const vehicle = prompt('What vehicle? (e.g., Subaru Outback)');
+  if (!vehicle) return;
+  const seats = parseInt(prompt('How many seats available?', '3')) || 3;
+  const pickup = prompt('Pickup area? (e.g., South Hills)');
+  await api(`/api/hikes/${hikeId}/carpool`, { method: 'POST', body: JSON.stringify({ vehicle, total_seats: seats, pickup_location: pickup }) });
+  loadCarpool(hikeId);
+}
+
+async function joinRide(offerId, hikeId) {
+  await api(`/api/carpool/${offerId}/join`, { method: 'POST' });
+  loadCarpool(hikeId);
+}
+
+async function loadTrails() {
+  trailsDataAPI = await api('/api/trails') || [];
+  renderTrails();
+}
+
+async function loadMembers() {
+  membersDataAPI = await api('/api/members') || [];
+  renderMembersAPI();
+}
+
+function renderMembersAPI() {
+  document.getElementById('member-grid').innerHTML = membersDataAPI.map(m => `
+    <div class="member">
+      <div class="member__avatar" style="background:${m.avatar_color || COLORS[0]}">${initials(m.display_name || '?')}</div>
+      <div class="member__name">${escapeHtml(m.display_name || 'Unknown')}</div>
+      <div class="member__kids">${escapeHtml(m.kids_info || 'No info yet')}</div>
+      <div class="member__stats">
+        <div class="member__stat">
+          <div class="member__stat-val">${m.hike_count || 0}</div>
+          <div class="member__stat-label">Hikes</div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function openProfileModal() {
+  if (!currentUser) return;
+  const backdrop = document.createElement('div');
+  backdrop.style.cssText = 'position:fixed;inset:0;z-index:300;background:rgba(0,0,0,0.4);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:24px';
+  backdrop.onclick = (e) => { if (e.target === backdrop) backdrop.remove(); };
+  backdrop.innerHTML = `<div style="background:var(--bg-card);border-radius:16px;padding:32px;max-width:420px;width:100%;box-shadow:0 24px 60px rgba(0,0,0,0.2)">
+    <h3 style="font-family:DM Serif Display,serif;margin-bottom:20px">Edit Profile</h3>
+    <label style="font-size:0.72rem;font-weight:600;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.06em;display:block;margin-bottom:4px">Display Name</label>
+    <input id="pf-name" value="${escapeHtml(currentUser.display_name || '')}" style="width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:8px;font-family:inherit;font-size:0.9rem;margin-bottom:14px;background:var(--bg)">
+    <label style="font-size:0.72rem;font-weight:600;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.06em;display:block;margin-bottom:4px">Kids Info</label>
+    <input id="pf-kids" value="${escapeHtml(currentUser.kids_info || '')}" placeholder="e.g., 2 kids (4, 7)" style="width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:8px;font-family:inherit;font-size:0.9rem;margin-bottom:14px;background:var(--bg)">
+    <label style="font-size:0.72rem;font-weight:600;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.06em;display:block;margin-bottom:4px">Emergency Contact</label>
+    <input id="pf-emergency" value="${escapeHtml(currentUser.emergency_contact || '')}" placeholder="Name & phone" style="width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:8px;font-family:inherit;font-size:0.9rem;margin-bottom:20px;background:var(--bg)">
+    <div style="display:flex;gap:10px;justify-content:flex-end">
+      <button class="btn btn--outline" onclick="this.closest('div[style]').parentElement.remove()">Cancel</button>
+      <button class="btn btn--green" onclick="saveProfile()">Save</button>
+    </div>
+  </div>`;
+  document.body.appendChild(backdrop);
+}
+
+async function saveProfile() {
+  const display_name = document.getElementById('pf-name').value;
+  const kids_info = document.getElementById('pf-kids').value;
+  const emergency_contact = document.getElementById('pf-emergency').value;
+  await api('/api/me', { method: 'PUT', body: JSON.stringify({ display_name, kids_info, emergency_contact }) });
+  currentUser = await api('/api/me');
+  document.querySelector('div[style*="position:fixed"]')?.remove();
+  loadMembers();
+}
+
+// Override renderTrails to use API data
+const _origRenderTrails = renderTrails;
+renderTrails = function() {
+  let source = trailsDataAPI.length > 0 ? trailsDataAPI : trailDirectory;
+  let filtered = source;
+  if (['easy','moderate','hard'].includes(trailFilter)) filtered = filtered.filter(t => t.difficulty === trailFilter);
+  else if (trailFilter !== 'all') filtered = filtered.filter(t => (t.tags || []).includes(trailFilter));
+
+  document.getElementById('trail-grid').innerHTML = filtered.map(t => `
+    <div class="trail" onclick="openTrailReport(${t.id || 0})">
+      <div class="trail__top">
+        <div class="trail__name">${escapeHtml(t.name)}</div>
+        <div class="trail__rating"><i data-lucide="star" style="width:12px;height:12px"></i> ${t.avg_rating ? parseFloat(t.avg_rating).toFixed(1) : (t.rating || '—')}</div>
+      </div>
+      <div class="trail__location"><i data-lucide="map-pin" style="width:11px;height:11px"></i> ${escapeHtml(t.location || '')}</div>
+      <div class="trail__stats">
+        <div class="trail__stat-box"><div class="trail__stat-val">${t.distance || '?'} mi</div><div class="trail__stat-label">Distance</div></div>
+        <div class="trail__stat-box"><div class="trail__stat-val">${t.elevation || '?'} ft</div><div class="trail__stat-label">Elevation</div></div>
+        <div class="trail__stat-box"><div class="trail__stat-val">${t.difficulty || 'easy'}</div><div class="trail__stat-label">Difficulty</div></div>
+      </div>
+      <div class="trail__tags">
+        <span class="tag tag--${t.difficulty || 'easy'}">${t.difficulty || 'easy'}</span>
+        ${(t.tags || []).map(tg => `<span class="tag tag--${tg}">${tg === 'kid' ? '👶 Kids' : tg === 'dog' ? '🐕 Dogs' : '👶 Stroller'}</span>`).join('')}
+      </div>
+    </div>
+  `).join('');
+  lucide.createIcons({ nameAttr: 'data-lucide' });
+};
+
+function openTrailReport(trailId) {
+  if (!trailId) return;
+  const condition = prompt('Trail condition? (good / muddy / snow / overgrown)');
+  if (!condition) return;
+  const rating = parseFloat(prompt('Rating (1-5)?', '4'));
+  const notes = prompt('Any notes?');
+  api(`/api/trails/${trailId}/report`, { method: 'POST', body: JSON.stringify({ condition, rating: isNaN(rating) ? null : rating, notes }) })
+    .then(() => { alert('Report submitted! Thanks 🏔️'); loadTrails(); });
+}
+
+// ============ INIT ============
+async function init() {
+  lucide.createIcons();
+  renderWeather();
+  renderGallery();
+  renderGear();
+  renderResources();
+  initScrollReveal();
+
+  const ok = await loadUser();
+  if (!ok) return;
+
+  await Promise.all([loadHikes(), loadTrails(), loadMembers()]);
+  renderTrailFilters();
+  initScrollReveal(); // re-observe new elements
+}
+
+init();
 </script>
 
 </body>

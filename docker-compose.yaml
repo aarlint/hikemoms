@@ -1,15 +1,17 @@
 services:
   hikemoms:
-    image: cgr.dev/chainguard/nginx:latest
+    build: .
     container_name: hikemoms
     restart: unless-stopped
     volumes:
-      - ./index.html:/usr/share/nginx/html/index.html:ro
-      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - hikemoms-data:/app/data
     labels:
-      - "traefik.http.services.hikemoms.loadbalancer.server.port=8080"
+      - "traefik.http.services.hikemoms.loadbalancer.server.port=3000"
     networks:
       - traefik-proxy
+
+volumes:
+  hikemoms-data:
 
 networks:
   traefik-proxy:
