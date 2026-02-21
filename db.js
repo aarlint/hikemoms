@@ -25,6 +25,7 @@ db.exec(`
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,
     trail TEXT NOT NULL,
+    trail_id INTEGER REFERENCES trails(id),
     description TEXT,
     date TEXT NOT NULL,
     time TEXT NOT NULL,
@@ -78,6 +79,9 @@ db.exec(`
     tags TEXT DEFAULT '[]',
     lat REAL,
     lng REAL,
+    trailhead_directions TEXT,
+    seasonal_notes TEXT,
+    elevation_profile TEXT,
     added_by INTEGER REFERENCES users(id),
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
   );
@@ -101,6 +105,26 @@ db.exec(`
     filename TEXT NOT NULL,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
   );
+
+  CREATE TABLE IF NOT EXISTS hike_log (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL REFERENCES users(id),
+    trail_id INTEGER REFERENCES trails(id),
+    trail_name TEXT NOT NULL,
+    date TEXT NOT NULL,
+    distance REAL,
+    elevation INTEGER,
+    duration_minutes INTEGER,
+    notes TEXT,
+    rating REAL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+  );
 `);
+
+// Add columns if they don't exist (migration-safe)
+try { db.exec('ALTER TABLE trails ADD COLUMN trailhead_directions TEXT'); } catch(e) {}
+try { db.exec('ALTER TABLE trails ADD COLUMN seasonal_notes TEXT'); } catch(e) {}
+try { db.exec('ALTER TABLE trails ADD COLUMN elevation_profile TEXT'); } catch(e) {}
+try { db.exec('ALTER TABLE hikes ADD COLUMN trail_id INTEGER REFERENCES trails(id)'); } catch(e) {}
 
 module.exports = db;

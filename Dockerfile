@@ -15,8 +15,9 @@ COPY --from=builder /app/node_modules ./node_modules/
 COPY package.json server.js db.js ./
 COPY public/ ./public/
 
-RUN mkdir -p /app/data
+RUN mkdir -p /app/data/uploads
 
 ENV NODE_ENV=production
+ENV DATA_PATH=/app/data
 EXPOSE 3000
 CMD ["server.js"]
