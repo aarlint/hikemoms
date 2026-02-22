@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Missoula Trail Moms</title>
+<title>Missoula Family Hikes</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
 <script src="https://unpkg.com/lucide@latest"></script>
@@ -293,7 +293,7 @@
   <nav class="nav">
     <a class="nav__logo" onclick="goHome()">
       <i data-lucide="mountain" style="width:20px;height:20px"></i>
-      Trail Moms
+      Family Hikes
     </a>
     <div class="nav__links" id="nav-links">
       <a class="nav__link" onclick="scrollTo('#hikes')">Hikes</a>
@@ -312,8 +312,8 @@
   </div>
   <div class="hero__content">
     <div class="hero__badge"><i data-lucide="map-pin" style="width:12px;height:12px"></i> Missoula, Montana</div>
-    <h1 class="hero__title">Missoula<br>Trail Moms</h1>
-    <p class="hero__sub">A community of moms exploring the incredible trails around Missoula — with kids, dogs, strollers, and good vibes.</p>
+    <h1 class="hero__title">Missoula<br>Family Hikes</h1>
+    <p class="hero__sub">Families exploring the incredible trails around Missoula — with kids, dogs, strollers, and good vibes.</p>
     <div class="hero__actions">
       <button class="btn btn--primary" onclick="scrollTo('#hikes')"><i data-lucide="calendar" style="width:16px;height:16px"></i> Upcoming Hikes</button>
       <button class="btn btn--ghost" onclick="scrollTo('#trails')"><i data-lucide="compass" style="width:16px;height:16px"></i> Trail Guide</button>
@@ -415,7 +415,7 @@
   <div class="sh fade-up" id="members">
     <div>
       <h2 class="sh__title">Our Crew</h2>
-      <p class="sh__sub">The moms making it happen</p>
+      <p class="sh__sub">Our hiking community</p>
     </div>
   </div>
   <div class="members fade-up" id="member-grid"></div>
@@ -431,7 +431,7 @@
 </div>
 
 <footer class="site-footer">
-  <div class="site-footer__logo">🏔️ Missoula Trail Moms</div>
+  <div class="site-footer__logo">🏔️ Missoula Family Hikes</div>
   <p class="site-footer__text">Getting families outside on the beautiful trails of western Montana. All skill levels welcome — we hike at kid pace!</p>
   <div class="site-footer__links">
     <a href="#" class="site-footer__link">Facebook Group</a>
@@ -495,7 +495,7 @@ function timeAgo(dateStr) {
 async function api(url, opts = {}) {
   const res = await fetch(url, { headers: { 'Content-Type': 'application/json', ...opts.headers }, ...opts });
   if (res.status === 401) {
-    document.body.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;font-family:DM Sans,sans-serif;color:#6b5e4f"><div style="text-align:center"><h2>🏔️ Missoula Trail Moms</h2><p style="margin-top:12px">Please sign in through Cloudflare Access to continue.</p></div></div>';
+    document.body.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;font-family:DM Sans,sans-serif;color:#6b5e4f"><div style="text-align:center"><h2>🏔️ Missoula Family Hikes</h2><p style="margin-top:12px">Please sign in through Cloudflare Access to continue.</p></div></div>';
     return null;
   }
   if (!res.ok) { const e = await res.json().catch(() => ({})); throw new Error(e.error || 'Request failed'); }

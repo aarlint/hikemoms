@@ -688,22 +688,8 @@ function seedIfEmpty() {
   });
   seed();
 
-  // Seed a few upcoming hikes
-  const hikes = [
-    { name: "Rattlesnake Creek Family Hike", trail: "Rattlesnake National Recreation Area", description: "Beautiful creek-side trail. Perfect for littles! We'll stop at the creek for snack time.", date: "2026-02-24", time: "9:00 AM", distance: 4.0, elevation: 400, duration: "2.5 hrs", difficulty: "easy", meetup_location: "Rattlesnake Trailhead parking lot (end of Rattlesnake Dr)", tags: ["kid","dog"] },
-    { name: "Blue Mountain Lookout Adventure", trail: "Blue Mountain Recreation Area", description: "Climb to the fire lookout for stunning valley views. Bring lunch to eat at the top!", date: "2026-03-01", time: "9:30 AM", distance: 2.6, elevation: 750, duration: "2 hrs", difficulty: "moderate", meetup_location: "Blue Mountain Trailhead parking", tags: ["dog","carpool"] },
-    { name: "Kim Williams Stroller Walk", trail: "Kim Williams Nature Area", description: "Flat paved trail along the river. Stroller-friendly! We'll do the out-and-back to the canyon entrance.", date: "2026-03-05", time: "10:00 AM", distance: 3.0, elevation: 50, duration: "1.5 hrs", difficulty: "easy", meetup_location: "Caras Park parking lot", tags: ["kid","stroller"] },
-    { name: "Waterworks Hill Sunset Hike", trail: "North Hills / Waterworks Hill", description: "Quick evening hike for sunset views. Bring snacks to share at the top!", date: "2026-03-08", time: "5:30 PM", distance: 2.0, elevation: 500, duration: "1.5 hrs", difficulty: "easy", meetup_location: "Corner of Cherry St & Orange St", tags: ["kid","dog"] },
-    { name: "Greenough Park Toddler Trek", trail: "Rattlesnake / Greenough Park", description: "Super easy loop perfect for toddlers. Creek play time included!", date: "2026-03-12", time: "10:00 AM", distance: 1.2, elevation: 80, duration: "1 hr", difficulty: "easy", meetup_location: "Greenough Park Monroe St entrance", tags: ["kid","stroller"] },
-  ];
-
-  const insertHike = db.prepare('INSERT INTO hikes (name, trail, description, date, time, distance, elevation, duration, difficulty, meetup_location, tags) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
-  const seedHikes = db.transaction(() => {
-    hikes.forEach(h => insertHike.run(h.name, h.trail, h.description, h.date, h.time, h.distance, h.elevation, h.duration, h.difficulty, h.meetup_location, JSON.stringify(h.tags)));
-  });
-  seedHikes();
-
-  console.log('Seeded database with 20 real Missoula trails and 5 upcoming hikes');
+  // No seeded hikes - users create their own
+  console.log('Seeded database with 20 real Missoula trails');
 }
 
 seedIfEmpty();
@@ -713,4 +699,4 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-app.listen(PORT, () => console.log(`Missoula Trail Moms running on :${PORT}`));
+app.listen(PORT, () => console.log(`Missoula Family Hikes running on :${PORT}`));
